@@ -8,7 +8,7 @@ from datetime import datetime
 
 # ========= CONFIG ========= #
 API_URL = "https://us-central1-ready-de-25.cloudfunctions.net/order_payments_table"   
-BUCKET_NAME = "your-gcs-bucket-name"
+BUCKET_NAME = "***********"
 GCP_CONN_ID = "google_cloud_default"  # Composer sets this up by default
 # ========================== #
 
