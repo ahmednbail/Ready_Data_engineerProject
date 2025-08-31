@@ -28,6 +28,7 @@ ext_date = "{{ execution_date }}"
 def create_trigger_task(trigger_dag_id):
     return TriggerDagRunOperator(
         task_id=trigger_dag_id,
+        dag=dag,
         trigger_dag_id=trigger_dag_id,
         conf={"execution_date": ext_date},
         wait_for_completion=True,
