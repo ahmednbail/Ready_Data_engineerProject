@@ -27,18 +27,16 @@ dag = DAG(
 
 ext_date = "{{ execution_date }}"
 
-
 def create_trigger_task(trigger_dag_id):
-     return TriggerDagRunOperator(
-         task_id=trigger_dag_id,
-         dag=dag,
-         trigger_dag_id=trigger_dag_id,
-         execution_date=ext_date,
-         wait_for_completion=True,
-         poke_interval=30,
-         deferrable=True,
-         trigger_rule="all_done",
-     )
+    return TriggerDagRunOperator(
+        task_id=trigger_dag_id,
+        trigger_dag_id=trigger_dag_id,
+        conf={"execution_date": ext_date},   
+        wait_for_completion=True,
+        poke_interval=30,
+        deferrable=True,
+        trigger_rule="all_done",
+    )
 
 with TaskGroup(group_id="P1_pipelines", dag=dag) as P1_pipelines:
      p1_dags = [
