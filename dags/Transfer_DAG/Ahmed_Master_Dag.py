@@ -4,7 +4,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow import DAG
 
 default_args = {
-    "owner": "Ahmed Nabil",
+    "owner": "airflow",
     "depends_on_past": False,
     "start_date": datetime(2025, 5, 23),
     "bigquery_conn_id": "bigquery_default",
@@ -59,6 +59,6 @@ with TaskGroup(group_id="P2_pipelines", dag=dag) as P2_pipelines:
 P1_pipelines >> P2_pipelines
 
          
-#Ahmed Nabil
+
 
 
