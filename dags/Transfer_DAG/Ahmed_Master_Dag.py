@@ -56,7 +56,6 @@ with TaskGroup(group_id="P2_pipelines", dag=dag) as P2_pipelines:
         create_trigger_task(task_id)
 
 
-P1_pipelines >> P2_pipelines
 
          
 
