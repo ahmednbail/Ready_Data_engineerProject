@@ -1,13 +1,10 @@
 from airflow import DAG
-from airflow.providers.google.cloud.transfers.postgres_to_gcs import (
-    PostgresToGCSOperator
-)
-from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
-    GCSToBigQueryOperator
-)
+from airflow.providers.google.cloud.transfers.postgres_to_gcs import PostgresToGCSOperator
+from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 
 POSTGRES_CONN_ID = "Ahmed_nabil_Customers_DB"
-GCS_BUCKET = "ready-labs-postgres-to-gcs/ahmednabil"
+GCS_BUCKET = "ready-labs-postgres-to-gcs"  # bucket name فقط
+GCS_PATH = "ahmednabil/customers"          # folder داخل الباكت
 GCS_FILENAME = "Ahmednabil_customers"
 BIGQUERY_DATASET = "project_landing"
 BIGQUERY_TABLE = "Ahmednabil_customers"
@@ -17,7 +14,6 @@ default_args = {
     "depends_on_past": False,
     "retries": 1,
 }
-
 
 dag = DAG(
     dag_id="customers_db_transfer",
@@ -38,7 +34,7 @@ transfer_postgres_to_gcs = PostgresToGCSOperator(
     ORDER BY updated_at_timestamp ASC
     """,
     bucket=GCS_BUCKET,
-    filename=f"{GCS_FILENAME}_{{{{ ds_nodash }}}}",  # e.g., Ahmednabil_customers_20250823
+    filename=f"{GCS_PATH}/{GCS_FILENAME}_{{{{ ds_nodash }}}}.json",
     export_format="json",
     dag=dag,
 )
@@ -47,13 +43,12 @@ transfer_postgres_to_gcs = PostgresToGCSOperator(
 load_gcs_to_bigquery = GCSToBigQueryOperator(
     task_id="load_gcs_to_bigquery",
     bucket=GCS_BUCKET,
-    source_objects=[f"{GCS_FILENAME}_{{{{ ds_nodash }}}}"],
+    source_objects=[f"{GCS_PATH}/{GCS_FILENAME}_{{{{ ds_nodash }}}}.json"],
     destination_project_dataset_table=f"{BIGQUERY_DATASET}.{BIGQUERY_TABLE}",
     source_format="NEWLINE_DELIMITED_JSON",
     write_disposition="WRITE_APPEND",  # Append new data to existing table
     create_disposition="CREATE_IF_NEEDED",
     dag=dag,
 )
-
 
 transfer_postgres_to_gcs >> load_gcs_to_bigquery
