@@ -15,14 +15,14 @@ default_args = {
 
 
 dag = DAG(
-    dag_id="master_transfer_dag",
+    dag_id="Ahmed_master_transfer_dag",
     description="All transfer DAGs",
     schedule_interval="05 00 * * *",
     concurrency=6,
     max_active_runs=1,
     default_args=default_args,
     tags=["master_transfer"],
-    catchup=False,
+    catchup=True,
  )
 
 ext_date = "{{ execution_date }}"
@@ -45,7 +45,8 @@ with TaskGroup(group_id="P1_pipelines", dag=dag) as P1_pipelines:
         "customers_db_transfer",
         "orders_db_transfer",
         "order_items_db_transfer",
-        "order_payments_db_transfer",
+        "ahmednabil_order_payments_api_dag",
+
      ]
      for task_id in p1_dags:
          create_trigger_task(task_id)
@@ -53,10 +54,12 @@ with TaskGroup(group_id="P1_pipelines", dag=dag) as P1_pipelines:
 with TaskGroup(group_id="P2_pipelines", dag=dag) as P2_pipelines:
      p2_dags = [
         "products_db_transfer",
-        "sellers_db_transfer",
+        "ahmednabil_seller_api_dag",
         "geolocation_db_transfer",
      ]
      for task_id in p2_dags:
          create_trigger_task(task_id)
+         
+
 
 
