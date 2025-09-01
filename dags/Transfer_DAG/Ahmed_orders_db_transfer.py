@@ -30,7 +30,6 @@ transfer_postgres_to_gcs = PostgresToGCSOperator(
     postgres_conn_id=POSTGRES_CONN_ID,
     sql="""
     SELECT * FROM orders
-    WHERE DATE(updated_at_timestamp) BETWEEN '2025-08-23' AND '2025-08-27'
     ORDER BY updated_at_timestamp ASC
     """,
     bucket=GCS_BUCKET,
