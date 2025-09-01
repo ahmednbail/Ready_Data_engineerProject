@@ -3,8 +3,8 @@ from airflow.providers.google.cloud.transfers.postgres_to_gcs import PostgresToG
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 
 POSTGRES_CONN_ID = "Ahmednabil_orders_products_DB"
-GCS_BUCKET = "ready-labs-postgres-to-gcs"  # bucket name فقط
-GCS_PATH = "ahmednabil/Order_items"          # folder داخل الباكت
+GCS_BUCKET = "ready-labs-postgres-to-gcs"  
+GCS_PATH = "ahmednabil/Order_items"        
 GCS_FILENAME = "Ahmednabil_Order_items"
 BIGQUERY_DATASET = "project_landing"
 BIGQUERY_TABLE = "Ahmednabil_Order_items"
@@ -29,7 +29,7 @@ transfer_postgres_to_gcs = PostgresToGCSOperator(
     task_id=f"{BIGQUERY_TABLE}_postgres_to_gcs",
     postgres_conn_id=POSTGRES_CONN_ID,
     sql="""
-    SELECT * FROM Order_items
+    SELECT * FROM order_items
     WHERE DATE(updated_at_timestamp) BETWEEN '2025-08-23' AND '2025-08-27'
     ORDER BY updated_at_timestamp ASC
     """,
