@@ -48,6 +48,7 @@ load_gcs_to_bigquery = GCSToBigQueryOperator(
     source_format="NEWLINE_DELIMITED_JSON",
     write_disposition="WRITE_APPEND",  # Append new data to existing table
     create_disposition="CREATE_IF_NEEDED",
+    autodetect=True,
     dag=dag,
 )
 
